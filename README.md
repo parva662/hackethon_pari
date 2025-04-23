@@ -47,20 +47,6 @@ This project combines a FastAPI backend for game generation with a React fronten
    ```
    The frontend will run on http://localhost:3000
 
-# Co-creation Agent API
-
-A FastAPI-based application that combines sports/activities to create new games using RAG (Retrieval-Augmented Generation) with LangChain and OpenAI.
-
-## Project Structure
-```
-HB_Agent_old/
-├── main.py              # Main FastAPI application
-├── demo_runner.py       # Test script for API endpoints
-├── requirements.txt     # Project dependencies
-├── .env                # Environment variables (API keys)
-└── game_library.jsonl  # Generated game responses
-```
-
 ## Features
 
 1. **Game Combination**
@@ -94,7 +80,61 @@ HB_Agent_old/
    - Health check endpoint
    - Returns server status
 
-## Setup
+## Dependencies
+
+### Backend
+```
+langchain==0.1.0
+langchain-community==0.0.20
+langchain-core==0.1.23
+langchain-openai==0.0.2
+openai>=1.6.1,<2.0.0
+fastapi==0.100.0
+uvicorn==0.23.0
+faiss-cpu==1.10.0
+```
+
+### Frontend
+- Next.js
+- React
+- Tailwind CSS
+
+## Current Status
+- ✅ API server running successfully
+- ✅ RAG functionality working
+- ✅ Response storage implemented
+- ✅ Test script working
+- ⚠️ Some deprecation warnings in LangChain (non-critical)
+
+## Areas for Improvement
+1. Error handling could be more robust
+2. Add input validation for game combinations
+3. Implement rate limiting
+4. Add authentication
+5. Expand the knowledge base for RAG
+6. Add more sophisticated game generation logic
+
+## Contributing
+Feel free to submit issues and enhancement requests!
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Co-creation Agent API
+
+A FastAPI-based application that combines sports/activities to create new games using RAG (Retrieval-Augmented Generation) with LangChain and OpenAI.
+
+### Project Structure
+```
+HB_Agent_old/
+├── main.py              # Main FastAPI application
+├── demo_runner.py       # Test script for API endpoints
+├── requirements.txt     # Project dependencies
+├── .env                # Environment variables (API keys)
+└── game_library.jsonl  # Generated game responses
+```
+
+### Setup
 
 1. Create a virtual environment:
 ```bash
@@ -122,40 +162,8 @@ python main.py
 python demo_runner.py
 ```
 
-## Dependencies
+### Frontend Configuration
 ```
-langchain==0.1.0
-langchain-community==0.0.20
-langchain-core==0.1.23
-langchain-openai==0.0.2
-openai>=1.6.1,<2.0.0
-fastapi==0.100.0
-uvicorn==0.23.0
-faiss-cpu==1.10.0
-```
-
-## Current Status
-- ✅ API server running successfully
-- ✅ RAG functionality working
-- ✅ Response storage implemented
-- ✅ Test script working
-- ⚠️ Some deprecation warnings in LangChain (non-critical)
-
-## Areas for Improvement
-1. Error handling could be more robust
-2. Add input validation for game combinations
-3. Implement rate limiting
-4. Add authentication
-5. Expand the knowledge base for RAG
-6. Add more sophisticated game generation logic
-
-## Contributing
-Feel free to submit issues and enhancement requests!
-
-## License
-This project is licensed under the MIT License - see the LICENSE file for details. 
-
-# Frontend
 frontend/node_modules/
 frontend/.next/
 frontend/.cache/
@@ -169,43 +177,29 @@ frontend/.env.production.local
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
+```
 
-# Dependencies
+### Dependencies
+```
 package-lock.json
 yarn.lock
+```
 
-# Testing
+### Testing
+```
 frontend/coverage/
+```
 
-# Production
+### Production
+```
 frontend/build/
+```
 
-# Misc
+### Misc
+```
 .DS_Store
 .env.local
 .env.development.local
 .env.test.local
-.env.production.local 
-
-import os
-from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-
-# Load environment variables
-load_dotenv()
-
-app = FastAPI(title="Co-creation Agent API")
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend URL
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# ... rest of your code ... 
+.env.production.local
+```
