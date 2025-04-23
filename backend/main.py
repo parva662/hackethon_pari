@@ -117,29 +117,20 @@ def startup_event():
 async def combine_cards(request: GameRequest) -> Dict[str, Any]:
     """Combine two cards into a new game using RAG"""
     try:
-        # Create a query for the RAG chain
-        query = f"Combine {request.card1} and {request.card2} into a new game. {request.constraints}"
-        
-        # Get response from RAG chain
-        result = qa_chain({"query": query})
-        
-        # Format the response
+        # Prompt the AI to generate full game content as JSON
+        prompt = (
+            f"Combine {request.card1} and {request.card2} into a new game"
+            f"{(' with constraints: ' + request.constraints) if request.constraints else ''}. "
+            "Return a JSON object with keys: description (string), rules (list of step-by-step instructions), "
+            "materials_needed (list of strings), and safety_considerations (list of strings)."
+        )
+        result = qa_chain({"query": prompt})
+        # Parse the AI's JSON output
+        parsed = json.loads(result["result"])
+        # Construct the final response using AI-generated fields
         response = {
             "game_name": f"{request.card1.capitalize()} {request.card2.capitalize()} Fusion",
-            "description": result["result"],
-            "rules": [
-                f"1. Start with basic {request.card1} rules",
-                f"2. Incorporate {request.card2} elements",
-                f"3. Add special rules for the fusion"
-            ],
-            "materials_needed": [
-                f"Basic {request.card1} equipment",
-                f"Basic {request.card2} equipment"
-            ],
-            "safety_considerations": [
-                "Ensure proper warm-up",
-                "Follow all safety guidelines"
-            ]
+            **parsed
         }
         
         # Save the response
