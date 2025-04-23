@@ -1,0 +1,39 @@
+{
+  "cards": [
+    {
+      "id": "card1",
+      "title": "Playing Basketball",
+      "description": "Enjoy a game of basketball with friends",
+      "imageUrl": "/cards/assets/basketball.svg",
+      "compatibleCardIds": ["card2", "card3", "card4"]
+    },
+    {
+      "id": "card2",
+      "title": "Reading Together",
+      "description": "Share stories and read books together",
+      "imageUrl": "/cards/assets/reading.svg",
+      "compatibleCardIds": ["card1", "card3", "card5"]
+    },
+    {
+      "id": "card3",
+      "title": "Art & Crafts",
+      "description": "Create beautiful art projects",
+      "imageUrl": "/cards/assets/art.svg",
+      "compatibleCardIds": ["card1", "card2", "card4", "card5"]
+    },
+    {
+      "id": "card4",
+      "title": "Board Games",
+      "description": "Play fun board games with friends",
+      "imageUrl": "/cards/assets/boardgames.svg",
+      "compatibleCardIds": ["card1", "card3", "card5"]
+    },
+    {
+      "id": "card5",
+      "title": "Music Making",
+      "description": "Make music and sing together",
+      "imageUrl": "/cards/assets/music.svg",
+      "compatibleCardIds": ["card2", "card3", "card4"]
+    }
+  ]
+} 
