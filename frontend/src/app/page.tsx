@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Auth from '@/components/Auth';
 import NameInput from '@/components/NameInput';
 import CardSelection from '@/components/CardSelection';
-import { User, GameState, Card } from '@/types';
+import { User, GameState, Card, GameResult } from '@/types';
 
 export default function Home() {
   const [gameState, setGameState] = useState<GameState>({
@@ -12,6 +12,8 @@ export default function Home() {
     phase: 'auth',
     user: null,
   });
+  const [gameResult, setGameResult] = useState<GameResult | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAuthenticated = (user: User) => {
     setGameState(prev => ({
@@ -41,28 +43,43 @@ export default function Home() {
       phase: 'results',
     }));
 
-    // In a real app, we would submit the card selection to the server here
-    submitCardSelection(cards, gameState.user!);
+    if (cards.length === 2) {
+      submitCardSelection(cards);
+    }
   };
 
-  const submitCardSelection = async (cards: Card[], user: User) => {
+  const submitCardSelection = async (cards: Card[]) => {
+    setIsLoading(true);
     try {
-      // Sort card IDs to ensure consistent order
-      const cardIds = cards.map(card => card.id).sort();
-      
-      await fetch('/api/submissions', {
+      const response = await fetch('http://localhost:8000/supervisor/combine', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          cardIds,
-          schoolId: user.schoolId,
-          userName: user.name,
+          card1: cards[0].title,
+          card2: cards[1].title,
         }),
       });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result: GameResult = await response.json();
+      setGameResult(result);
     } catch (error) {
-      console.error('Error submitting card selection:', error);
+      console.error('Error submitting cards:', error);
+      setGameResult({ 
+        game_name: 'Error',
+        description: 'Failed to generate game combination',
+        rules: [],
+        materials_needed: [],
+        safety_considerations: [],
+        error: 'Failed to connect to the server'
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -83,9 +100,55 @@ export default function Home() {
         return (
           <div className="flex flex-col items-center justify-center min-h-[50vh] p-6">
             <h1 className="text-3xl font-bold mb-8 text-center">Thank you for your submission!</h1>
-            <p className="text-xl mb-8">
-              Your card choices have been recorded. Results coming soon...
-            </p>
+            {isLoading && (
+              <div className="mt-8">
+                <p className="text-xl">Generating your game combination...</p>
+              </div>
+            )}
+
+            {gameResult && !isLoading && (
+              <div className="mt-8 space-y-6">
+                <h2 className="text-3xl font-bold">{gameResult.game_name}</h2>
+                
+                <div>
+                  <h3 className="text-2xl font-semibold mb-2">Description</h3>
+                  <p>{gameResult.description}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-2xl font-semibold mb-2">Rules</h3>
+                  <ul className="list-disc pl-6">
+                    {gameResult.rules.map((rule, index) => (
+                      <li key={index}>{rule}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-2xl font-semibold mb-2">Materials Needed</h3>
+                  <ul className="list-disc pl-6">
+                    {gameResult.materials_needed.map((material, index) => (
+                      <li key={index}>{material}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-2xl font-semibold mb-2">Safety Considerations</h3>
+                  <ul className="list-disc pl-6">
+                    {gameResult.safety_considerations.map((consideration, index) => (
+                      <li key={index}>{consideration}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                {gameResult.error && (
+                  <div className="text-red-600">
+                    <p>{gameResult.error}</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         );
       default:

@@ -31,4 +31,13 @@ export interface GameState {
   selectedCards: Card[];
   phase: 'auth' | 'name' | 'selection' | 'results';
   user: User | null;
+}
+
+export interface GameResult {
+  game_name: string;
+  description: string;
+  rules: string[];
+  materials_needed: string[];
+  safety_considerations: string[];
+  error?: string;
 } 

@@ -1,6 +1,86 @@
-# Game Co-Creation Project
+# Game Combination Generator
 
-This project combines a FastAPI backend for game generation with a React frontend for user interaction.
+This project is an interactive web application that allows users to combine different cards to generate unique game ideas. The application features a multi-step process including authentication, user identification, card selection, and game generation.
+
+## Project Structure
+
+The project is built using Next.js for the frontend with TypeScript support.
+
+### Core Types
+
+#### Card
+```typescript
+interface Card {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  compatibleCardIds: string[];
+}
+```
+Represents individual cards that users can select and combine.
+
+#### GameResult
+```typescript
+interface GameResult {
+  game_name: string;
+  description: string;
+  rules: string[];
+  materials_needed: string[];
+  safety_considerations: string[];
+  error?: string;
+}
+```
+Represents the generated game combination result from the backend.
+
+#### User
+```typescript
+interface User {
+  id: string;
+  name: string;
+  schoolId: string;
+  role: 'student' | 'teacher';
+}
+```
+Represents an authenticated user in the system.
+
+#### GameState
+```typescript
+interface GameState {
+  selectedCards: Card[];
+  phase: 'auth' | 'name' | 'selection' | 'results';
+  user: User | null;
+}
+```
+Manages the application's state and flow.
+
+## Application Flow
+
+1. **Authentication Phase (`auth`)**: Users must first authenticate using their credentials.
+2. **Name Input Phase (`name`)**: Authenticated users provide their name.
+3. **Card Selection Phase (`selection`)**: Users can select two cards to combine.
+4. **Results Phase (`results`)**: The application displays the generated game combination based on the selected cards.
+
+## API Integration
+
+The application communicates with a backend server running on `http://localhost:8000` to generate game combinations. The main endpoint used is:
+
+- `POST /supervisor/combine`: Accepts two card titles and returns a generated game combination.
+
+## Error Handling
+
+The application includes comprehensive error handling:
+- Network errors are caught and displayed to the user
+- Loading states are managed to provide feedback during API calls
+- Type safety is enforced throughout the application using TypeScript
+
+## UI Features
+
+- Responsive design using Tailwind CSS
+- Clear visual hierarchy for game results
+- Loading indicators during API calls
+- Error messages when things go wrong
+- Step-by-step user flow with clear phase transitions
 
 ## Project Structure
 ```bash
