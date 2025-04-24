@@ -126,8 +126,7 @@ async def combine_cards(request: GameRequest) -> Dict[str, Any]:
             "- rules (list of strings): how to play the game\n"
             "- materials_needed (list of strings): equipment needed\n"
             "- safety_considerations (list of strings): tips to stay safe\n"
-            "- scoring_system (list of strings): fair and simple point rules that show how to win or lose\n"
-            "Return the JSON object only, nothing else."
+            "- scoring_system (list of strings): scoring must be included. Define how players earn points, how they win, and when the game ends."
         )
         result = qa_chain({"query": prompt})
         # Parse the AI's JSON output
