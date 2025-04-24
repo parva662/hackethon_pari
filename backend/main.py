@@ -119,10 +119,15 @@ async def combine_cards(request: GameRequest) -> Dict[str, Any]:
     try:
         # Prompt the AI to generate full game content as JSON
         prompt = (
-            f"Combine {request.card1} and {request.card2} into a new game"
+            f"Combine {request.card1} and {request.card2} into a new creative physical activity game for students"
             f"{(' with constraints: ' + request.constraints) if request.constraints else ''}. "
-            "Return a JSON object with keys: description (string), rules (list of step-by-step instructions), "
-            "materials_needed (list of strings), and safety_considerations (list of strings)."
+            "Return a JSON object with the following keys:\n"
+            "- description (string): a short description of the game and its goal\n"
+            "- rules (list of strings): how to play the game\n"
+            "- materials_needed (list of strings): equipment needed\n"
+            "- safety_considerations (list of strings): tips to stay safe\n"
+            "- scoring_system (list of strings): fair and simple point rules that show how to win or lose\n"
+            "Return the JSON object only, nothing else."
         )
         result = qa_chain({"query": prompt})
         # Parse the AI's JSON output
