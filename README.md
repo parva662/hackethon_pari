@@ -106,7 +106,13 @@ The application includes comprehensive error handling:
    ```bash
    pip install -r requirements.txt
    ```
-4. Start the backend server:
+4. Create a `.env` file from the example:
+   ```bash
+   cp .env.example .env
+   ```
+   Open `.env` and replace `your-key-here` with your OpenAI API key.
+
+5. Start the backend server:
    ```bash
    python main.py
    ```
